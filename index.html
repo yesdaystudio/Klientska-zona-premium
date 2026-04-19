@@ -7,12 +7,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         :root { --cream: #f4f1ea; --gold: #d4af37; --dark: #1a1a1a; --white: #ffffff; }
-        body { margin: 0; font-family: 'Montserrat', sans-serif; background-color: var(--cream); color: var(--dark); display: flex; justify-content: center; align-items: center; min-height: 100vh; }
-        .container { max-width: 500px; width: 90%; background: white; padding: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border-radius: 5px; margin: 20px; }
+        body { margin: 0; font-family: 'Montserrat', sans-serif; background-color: var(--cream); color: var(--dark); display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; box-sizing: border-box; }
+        .container { max-width: 500px; width: 100%; background: white; padding: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border-radius: 5px; }
         h2 { font-family: 'Playfair Display', serif; text-align: center; margin-bottom: 30px; color: var(--dark); }
         .form-group { margin-bottom: 20px; }
         label { display: block; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; font-weight: 600; color: #555; }
-        input, select, textarea { width: 100%; padding: 12px; border: 1px solid #ddd; font-family: 'Montserrat'; box-sizing: border-box; border-radius: 3px; }
+        input, select, textarea { width: 100%; padding: 12px; border: 1px solid #ddd; font-family: 'Montserrat'; box-sizing: border-box; border-radius: 3px; font-size: 0.9rem; }
         input:focus { border-color: var(--gold); outline: none; }
         #dynamic-section { background: #fafafa; border-left: 3px solid var(--gold); padding: 20px; margin-top: 10px; display: none; }
         .btn-send { background: var(--dark); color: white; width: 100%; padding: 15px; border: none; cursor: pointer; text-transform: uppercase; letter-spacing: 2px; font-weight: bold; margin-top: 20px; transition: 0.3s; }
@@ -27,14 +27,92 @@
         <h2>Potvrdenie účasti</h2>
         <form id="rsvp-form">
             <div class="form-group">
-                <label>Vaše meno a priezvisko</label>
-                <input type="text" name="meno" required placeholder="napr. Ján Novák">
+                <label>Meno hlavného hosťa</label>
+                <input type="text" name="meno" required placeholder="napr. Janko Mrkvička">
             </div>
 
             <div class="form-group">
                 <label>Prídete?</label>
                 <select name="ucast" id="ucast-select" onchange="toggleGuestFields()" required>
                     <option value="">Vyberte možnosť</option>
+                    <option value="Ano">Áno, prídeme!</option>
+                    <option value="Nie">Bohužiaľ, nemôžeme</option>
+                </select>
+            </div>
+
+            <div id="dynamic-section">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div class="form-group">
+                        <label>Počet dospelých</label>
+                        <input type="number" name="dospeli" value="1" min="1">
+                    </div>
+                    <div class="form-group">
+                        <label>Počet detí</label>
+                        <input type="number" name="deti" value="0" min="0">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Ubytovanie</label>
+                    <select name="ubytovanie">
+                        <option value="Nie">Nie, zabezpečíme si sami</option>
+                        <option value="Ano">Áno, máme záujem</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Jedlo / alergie</label>
+                    <textarea name="alergie" rows="2" placeholder="napr. 1x bez laktózy, bez orechov..."></textarea>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-send" id="submit-btn">Odoslať odpoveď</button>
+        </form>
+    </div>
+
+    <div id="success-msg">
+        <p>Ďakujeme! ❤️</p>
+        <p style="font-size: 0.9rem; font-weight: 400;">Vaša odpoveď bola úspešne odoslaná do našej svadobnej tabuľky.</p>
+    </div>
+</div>
+
+<script>
+    // TVOJ LINK Z GOOGLE SCRIPTU (z tvojho prvého screenshotu)
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbyQRpmkN-31wF9aIJpjL9z9MM58DN7Akhc5RKWER4SByY_St1DGuK23bBLlO_3N5Ezt/exec';
+    
+    const form = document.getElementById('rsvp-form');
+
+    form.addEventListener('submit', e => {
+        e.preventDefault();
+        const submitBtn = document.getElementById('submit-btn');
+        submitBtn.innerText = 'Odosiela sa...';
+        submitBtn.disabled = true;
+
+        fetch(scriptURL, { 
+            method: 'POST', 
+            mode: 'no-cors', 
+            body: new FormData(form)
+        })
+        .then(() => {
+            document.getElementById('form-wrapper').style.display = 'none';
+            document.getElementById('success-msg').style.display = 'block';
+        })
+        .catch(error => {
+            console.error('Chyba!', error.message);
+            alert('Nastala chyba pri odosielaní. Skúste to prosím znova.');
+            submitBtn.disabled = false;
+            submitBtn.innerText = 'Odoslať odpoveď';
+        });
+    });
+
+    function toggleGuestFields() {
+        const ucast = document.getElementById('ucast-select').value;
+        document.getElementById('dynamic-section').style.display = (ucast === 'Ano') ? 'block' : 'none';
+    }
+</script>
+
+</body>
+</html>                    <option value="">Vyberte možnosť</option>
                     <option value="Ano">Áno, prídeme!</option>
                     <option value="Nie">Bohužiaľ, nemôžeme</option>
                 </select>
