@@ -62,7 +62,7 @@
 
                 <div class="form-group">
                     <label>Jedlo / alergie</label>
-                    <textarea name="alergie" rows="2" placeholder="napr. 1x bez laktózy, bez orechov..."></textarea>
+                    <textarea name="alergie" rows="2" placeholder="napr. 1x bez laktózy..."></textarea>
                 </div>
             </div>
 
@@ -72,86 +72,7 @@
 
     <div id="success-msg">
         <p>Ďakujeme! ❤️</p>
-        <p style="font-size: 0.9rem; font-weight: 400;">Vaša odpoveď bola úspešne odoslaná do našej svadobnej tabuľky.</p>
-    </div>
-</div>
-
-<script>
-    // TVOJ LINK Z GOOGLE SCRIPTU (z tvojho prvého screenshotu)
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbzwyBVObEHL0WuV0Z4d2gor0wW6VwAt9Dx-PG3dXw_P35tpzR6RA-DzIjYjRObzhVO9/exec';
-    
-    const form = document.getElementById('rsvp-form');
-
-    form.addEventListener('submit', e => {
-        e.preventDefault();
-        const submitBtn = document.getElementById('submit-btn');
-        submitBtn.innerText = 'Odosiela sa...';
-        submitBtn.disabled = true;
-
-        fetch(scriptURL, { 
-            method: 'POST', 
-            mode: 'no-cors', 
-            body: new FormData(form)
-        })
-        .then(() => {
-            document.getElementById('form-wrapper').style.display = 'none';
-            document.getElementById('success-msg').style.display = 'block';
-        })
-        .catch(error => {
-            console.error('Chyba!', error.message);
-            alert('Nastala chyba pri odosielaní. Skúste to prosím znova.');
-            submitBtn.disabled = false;
-            submitBtn.innerText = 'Odoslať odpoveď';
-        });
-    });
-
-    function toggleGuestFields() {
-        const ucast = document.getElementById('ucast-select').value;
-        document.getElementById('dynamic-section').style.display = (ucast === 'Ano') ? 'block' : 'none';
-    }
-</script>
-
-</body>
-</html>                    <option value="">Vyberte možnosť</option>
-                    <option value="Ano">Áno, prídeme!</option>
-                    <option value="Nie">Bohužiaľ, nemôžeme</option>
-                </select>
-            </div>
-
-            <div id="dynamic-section">
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                    <div class="form-group">
-                        <label>Počet dospelých</label>
-                        <input type="number" name="dospeli" value="1" min="1">
-                    </div>
-                    <div class="form-group">
-                        <label>Počet detí</label>
-                        <input type="number" name="deti" value="0" min="0">
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label>Mená ostatných hostí</label>
-                    <textarea name="ostatni_menovite" rows="2" placeholder="napr. Jana Nováková, Lucka (3r.)"></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label>Alergie / Diéty</label>
-                    <textarea name="alergie" rows="2" placeholder="napr. 1x bez laktózy"></textarea>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label>Odkaz pre snúbencov</label>
-                <textarea name="poznamka" rows="2"></textarea>
-            </div>
-
-            <button type="submit" class="btn-send" id="submit-btn">Odoslať odpoveď</button>
-        </form>
-    </div>
-    <div id="success-msg">
-        <p>Ďakujeme! ❤️</p>
-        <p style="font-size: 0.9rem; font-weight: 400;">Vaša odpoveď bola úspešne odoslaná do našej svadobnej tabuľky.</p>
+        <p style="font-size: 0.9rem; font-weight: 400;">Vaša odpoveď bola úspešne odoslaná do svadobnej tabuľky.</p>
     </div>
 </div>
 
@@ -165,26 +86,33 @@
         submitBtn.innerText = 'Odosiela sa...';
         submitBtn.disabled = true;
 
-        // Použijeme 'no-cors' - to povie prehliadaču: "Nerieš odpoveď, len to tam pošli"
         fetch(scriptURL, { 
             method: 'POST', 
             mode: 'no-cors', 
             body: new FormData(form)
         })
         .then(() => {
-            // Pri 'no-cors' nevieme presne, či to prešlo, ale v 99% prípadov to prejde
             document.getElementById('form-wrapper').style.display = 'none';
             document.getElementById('success-msg').style.display = 'block';
         })
         .catch(error => {
             console.error('Chyba!', error.message);
-            alert('Nastala chyba, ale skúste skontrolovať tabuľku, možno to prešlo.');
+            alert('Chyba pri odosielaní.');
             submitBtn.disabled = false;
+            submitBtn.innerText = 'Odoslať odpoveď';
         });
     });
 
     function toggleGuestFields() {
         const ucast = document.getElementById('ucast-select').value;
-        document.getElementById('dynamic-section').style.display = (ucast === 'Ano') ? 'block' : 'none';
+        const dynamicSection = document.getElementById('dynamic-section');
+        if (ucast === 'Ano') {
+            dynamicSection.style.display = 'block';
+        } else {
+            dynamicSection.style.display = 'none';
+        }
     }
 </script>
+
+</body>
+</html>
