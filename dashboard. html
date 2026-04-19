@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YesDay | Klientska Zóna</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root { --cream: #f4f1ea; --gold: #d4af37; --dark: #1a1a1a; --white: #ffffff; }
+        body { margin: 0; font-family: 'Montserrat', sans-serif; background-color: var(--cream); color: var(--dark); }
+
+        /* PRIHLASOVACIA OBRAZOVKA */
+        #login-screen {
+            height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;
+        }
+        .login-box { background: white; padding: 40px; border-radius: 5px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); max-width: 400px; width: 90%; }
+        .lock-icon { font-size: 3rem; margin-bottom: 20px; }
+        input[type="password"] { width: 100%; padding: 12px; margin: 20px 0; border: 1px solid #ddd; border-radius: 3px; box-sizing: border-box; text-align: center; font-size: 1.1rem; }
+        .btn-gold { background: var(--dark); color: white; border: none; padding: 12px 30px; cursor: pointer; text-transform: uppercase; letter-spacing: 2px; font-weight: 600; transition: 0.3s; width: 100%; }
+        .btn-gold:hover { background: var(--gold); }
+
+        /* DASHBOARD (SKRYTÝ) */
+        #dashboard { display: none; padding: 40px 20px; max-width: 1100px; margin: 0 auto; }
+        .header { text-align: center; margin-bottom: 50px; }
+        h1 { font-family: 'Playfair Display', serif; font-size: 2.5rem; margin-bottom: 10px; }
+        .status-badge { background: var(--gold); color: white; padding: 5px 15px; border-radius: 20px; font-size: 0.8rem; text-transform: uppercase; }
+
+        /* TABUĽKA S DÁTAMI */
+        .table-container { background: white; padding: 20px; border-radius: 5px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); overflow-x: auto; }
+        iframe { width: 100%; height: 600px; border: none; }
+
+        .footer { text-align: center; margin-top: 40px; font-size: 0.8rem; color: #888; text-transform: uppercase; letter-spacing: 1px; }
+    </style>
+</head>
+<body>
+
+    <div id="login-screen">
+        <div class="login-box">
+            <div class="lock-icon">🔒</div>
+            <h2 style="font-family: 'Playfair Display';">Klientska Zóna</h2>
+            <p style="font-size: 0.9rem; color: #666;">Zadajte prístupové heslo pre projekt Diana & Anton</p>
+            <input type="password" id="password-input" placeholder="Heslo">
+            <button class="btn-gold" onclick="checkPassword()">Odomknúť</button>
+            <p id="error-msg" style="color: red; display: none; margin-top: 15px; font-size: 0.8rem;">Nesprávne heslo, skúste to znova.</p>
+        </div>
+    </div>
+
+    <div id="dashboard">
+        <div class="header">
+            <span class="status-badge">Live Dáta z RSVP</span>
+            <h1>Diana & Anton</h1>
+            <p>Prehľad prihlásených hostí a požiadaviek</p>
+        </div>
+
+        <div class="table-container">
+            <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTpNvrLA60PyNKyoKSM_FIw47_cs__QK4yIGyl6Fmwdjo6Ng-gGB1dGK9o-gexYXxlNV58In0kqffui/pubhtml?widget=true&amp;headers=false"></iframe>
+        </div>
+
+        <div class="footer">
+            Powered by YesDay Studio
+        </div>
+    </div>
+
+    <script>
+        function checkPassword() {
+            const pass = document.getElementById('password-input').value;
+            // Tvoje nastavené heslo
+            if (pass.toUpperCase() === "DIANA2026") {
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('dashboard').style.display = 'block';
+                document.body.style.backgroundColor = "#f4f1ea";
+            } else {
+                document.getElementById('error-msg').style.display = 'block';
+            }
+        }
+
+        // Umožní stlačiť Enter pre prihlásenie
+        document.getElementById('password-input').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                checkPassword();
+            }
+        });
+    </script>
+</body>
+</html>
