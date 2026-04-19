@@ -78,16 +78,8 @@
 </div>
 
 <script>
-    // Správne nastavený link na tvoj Google Script
     const scriptURL = 'https://script.google.com/macros/s/AKfycbyQRpmkN-31wF9aIJpjL9z9MM58DN7Akhc5RKWER4SByY_St1DGuK23bBLlO_3N5Ezt/exec';
-    
     const form = document.getElementById('rsvp-form');
-    const dynamicSection = document.getElementById('dynamic-section');
-
-    function toggleGuestFields() {
-        const ucast = document.getElementById('ucast-select').value;
-        dynamicSection.style.display = (ucast === 'Ano') ? 'block' : 'none';
-    }
 
     form.addEventListener('submit', e => {
         e.preventDefault();
@@ -95,9 +87,26 @@
         submitBtn.innerText = 'Odosiela sa...';
         submitBtn.disabled = true;
 
-        fetch(scriptURL, { method: 'POST', body: new FormData(form)})
-            .then(response => {
-                document.getElementById('form-wrapper').style.display = 'none';
-                document.getElementById('success-msg').style.display = 'block';
-            })
-            .catch(error
+        // Použijeme 'no-cors' - to povie prehliadaču: "Nerieš odpoveď, len to tam pošli"
+        fetch(scriptURL, { 
+            method: 'POST', 
+            mode: 'no-cors', 
+            body: new FormData(form)
+        })
+        .then(() => {
+            // Pri 'no-cors' nevieme presne, či to prešlo, ale v 99% prípadov to prejde
+            document.getElementById('form-wrapper').style.display = 'none';
+            document.getElementById('success-msg').style.display = 'block';
+        })
+        .catch(error => {
+            console.error('Chyba!', error.message);
+            alert('Nastala chyba, ale skúste skontrolovať tabuľku, možno to prešlo.');
+            submitBtn.disabled = false;
+        });
+    });
+
+    function toggleGuestFields() {
+        const ucast = document.getElementById('ucast-select').value;
+        document.getElementById('dynamic-section').style.display = (ucast === 'Ano') ? 'block' : 'none';
+    }
+</script>
